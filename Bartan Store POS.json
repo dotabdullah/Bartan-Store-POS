@@ -1,0 +1,521 @@
+{
+  "name": "Bartan Store POS",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -688,
+        144
+      ],
+      "id": "ab07f10d-1ead-448d-b54e-29cda893176a",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "K93dxjj51uqPULnq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 10
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -528,
+        144
+      ],
+      "id": "4d2bb1b4-ddbb-4540-94a5-02301d9682b6",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -768,
+        -80
+      ],
+      "id": "39f9b5ca-cd5b-4a8d-b168-7643bae53407",
+      "name": "When chat message received",
+      "webhookId": "8934a3e6-6916-4573-8bb6-11e2b42c6287"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are the AI Assistant for Abdullah Bartan Store.\nYou manage the Bartan Store.xlsx file with two sheets:\n\n📑 1. Inventory Sheet\n\nColumns:\n\nProduct Inventory (auto-generated code: BS-001, BS-002, sequential)\n\nProduct Name\n\nProduct Category (Steel, Stainless Steel, Plastic, Glass Crockery)\n\nStock Available\n\nRules:\n\nAuto-generate next sequential product code when adding a new product.\n\nIncrease or decrease stock when products are sold or restocked.\n\nAlert if stock < 40.\n\nDelete row if discontinued.\n\n📑 2. Invoices Sheet\n\nColumns:\n\nDate (YYYY-MM-DD, auto-generated)\n\nInvoice Number (INV-YYYYMMDD-HHMMSS, always unique)\n\nCustomer Name\n\nCustomer Email\n\nProduct Name\n\nQuantity\n\nCustomer Phone\n\nCustomer Address\n\nRules:\n\nDate is always auto-generated.\n\nInvoice Number is auto-generated with current date and time.\n\nAlways ask for Customer Name, Customer Email, Product Name, Quantity, Customer Phone, and Customer Address.\n\nWhen invoice is created:\n\nReduce stock in Inventory Sheet by Quantity.\n\nSend the invoice to the Customer’s Email (via Gmail Node) in a professional invoice format.\n\nBe able to provide:\n\nLast created invoice.\n\nAny specific invoice by Invoice Number.\n\nA list of recent invoices.\n\n✅ Output Format\n\nAlways return results in simple readable format (not JSON).\n\nInventory Example\n✅ Inventory Updated  \nProduct Code: BS-011  \nProduct Name: Glass Water Jug  \nCategory: Glass Crockery  \nStock Available: 95\n\nProfessional Invoice Example (For Gmail Node)\n📑 Abdullah Bartan Store  \n123 Main Street, Lahore, Pakistan  \nPhone: +92 300 1234567 | Email: support@bartanstore.com  \n\n-------------------------------\nINVOICE  \nDate: 2025-09-23  \nInvoice Number: INV-20250923-142315  \n-------------------------------\n\nBill To:  \nCustomer Name: Ali Khan  \nEmail: ali@example.com  \nPhone: 03001234567  \nAddress: Lahore, Pakistan  \n\n-------------------------------\nProduct Details:  \nProduct: Glass Water Jug  \nCategory: Glass Crockery  \nQuantity: 2  \n-------------------------------\n\nThank you for shopping with Abdullah Bartan Store.  \nPlease contact us if you have any questions regarding your order.  \n\nRegards,  \nAbdullah Bartan Store\n\nLast Invoice Example\n📄 Last Invoice  \nDate: 2025-09-23  \nInvoice Number: INV-20250923-142315  \nCustomer Name: Ali Khan  \nCustomer Email: ali@example.com  \nProduct Name: Glass Water Jug  \nQuantity: 2  \nCustomer Phone: 03001234567  \nCustomer Address: Lahore, Pakistan\n\nInvoice List Example\n📑 Recent Invoices  \n1. INV-20250923-142315 | Ali Khan | Glass Water Jug x2 | ali@example.com  \n2. INV-20250923-142420 | Sara Ahmed | Steel Dinner Plate x4 | sara@example.com  \n3. INV-20250923-142530 | Bilal Raza | Plastic Storage Container x1 | bilal@example.com\n\n✅ Behavior Guidelines\n\nNever return JSON.\n\nAlways respond in professional readable format.\n\nAsk for missing required fields.\n\nInvoice must be formatted clearly for sending through Gmail Node.\n\nEnsure Invoice Numbers are unique with INV-YYYYMMDD-HHMMSS.\n\nInventory stock must always sync when invoices are created."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -528,
+        -80
+      ],
+      "id": "9703ac96-d191-49b6-88f5-ad16bdcac85d",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4",
+          "mode": "list",
+          "cachedResultName": "Bartan Store",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1600830055,
+          "mode": "list",
+          "cachedResultName": "Invoices",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit#gid=1600830055"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Customer Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Customer_Name', ``, 'string') }}",
+            "Customer Address": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Customer_Address', ``, 'string') }}",
+            "Date": "={{ $today.toFormat(\"dd/MM/yyyy\") }}",
+            "Invoice Number": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Invoice_Number', ``, 'string') }}",
+            "Product Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Product_Name', ``, 'string') }}",
+            "Customer Phone": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Customer_Phone', ``, 'string') }}",
+            "Customer Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Customer_Email', ``, 'string') }}",
+            "Quantity": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Quantity', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Invoice Number",
+              "displayName": "Invoice Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer Name",
+              "displayName": "Customer Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Quantity",
+              "displayName": "Quantity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer Phone",
+              "displayName": "Customer Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer Email",
+              "displayName": "Customer Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Customer Address",
+              "displayName": "Customer Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -240,
+        144
+      ],
+      "id": "db04cbdb-464c-4877-bb73-af32a16f5b42",
+      "name": "Sale Invoices",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "n3CsRctCNKp8pcn9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4",
+          "mode": "list",
+          "cachedResultName": "Bartan Store",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inventory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product Code": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Product_Code', ``, 'string') }}",
+            "Product Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Product_Name', ``, 'string') }}",
+            "Product Category": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Product_Category', ``, 'string') }}",
+            "Stock Available": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Stock_Available', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "Product Name"
+          ],
+          "schema": [
+            {
+              "id": "Product Code",
+              "displayName": "Product Code",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Name",
+              "displayName": "Product Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Product Category",
+              "displayName": "Product Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Stock Available",
+              "displayName": "Stock Available",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -112,
+        144
+      ],
+      "id": "3ae2255f-01a7-43b9-a60e-c9498f9547e9",
+      "name": "Update/New Inventory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "n3CsRctCNKp8pcn9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4",
+          "mode": "list",
+          "cachedResultName": "Bartan Store",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inventory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit#gid=0"
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        32,
+        144
+      ],
+      "id": "40943c0e-f942-4c63-91ff-952ecb4de201",
+      "name": "Delete Inventory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "n3CsRctCNKp8pcn9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4",
+          "mode": "list",
+          "cachedResultName": "Bartan Store",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Inventory",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        -384,
+        144
+      ],
+      "id": "74aee411-e33d-4957-88fa-aca365c48026",
+      "name": "Check Inventory",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "n3CsRctCNKp8pcn9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4",
+          "mode": "list",
+          "cachedResultName": "Bartan Store",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1600830055,
+          "mode": "list",
+          "cachedResultName": "Invoices",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/18iVviSkqpRE8Q5NmEA0cs9aTI_cOJsCz8q1Ic-cUTE4/edit#gid=1600830055"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        176,
+        144
+      ],
+      "id": "e73844ae-fafa-462a-a471-4d4c8cec97d3",
+      "name": "Read Invoices",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "n3CsRctCNKp8pcn9",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        320,
+        144
+      ],
+      "id": "0ca469d5-134c-4733-8c19-0ee95e572d6c",
+      "name": "Send Invoice to Customer",
+      "webhookId": "0a9d1dd4-3984-47d3-a8d4-287fd836dfb5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WbXSocArOgjPii8H",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sale Invoices": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update/New Inventory": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Inventory": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Inventory": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Invoices": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Invoice to Customer": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e238560f-8222-4d9e-86f8-870bfa08c406",
+  "meta": {
+    "templateId": "self-building-ai-agent",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "36d6ab09475ee13dc2db1320944cdb991ab3e612a4173e950e9e3c09e99bb69a"
+  },
+  "id": "m5p1DO8MyT5V8wh6",
+  "tags": []
+}
